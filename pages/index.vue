@@ -4,7 +4,9 @@
       <div class="text-center">
         <v-list>
           <v-list-item v-for="room of rooms" :key="room.key">
-            <v-list-item-title>{{room.name}}</v-list-item-title>
+            <v-list-item-title>
+              <v-btn nuxt outlined :to="{path:`/rooms/${room.name}`}">{{room.name}}</v-btn>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </div>
@@ -27,10 +29,13 @@ export default Vue.extend({
     }
   },
   mounted() {
-    const roomsRef = firebase.database().ref(`rooms`)
-    roomsRef.on("value", snapshot => {
-      this.rooms = snapshot.val()
-    })
+    // const roomsRef =
+    firebase
+      .database()
+      .ref(`rooms`)
+      .on("value", snapshot => {
+        this.rooms = snapshot.val()
+      })
   }
 })
 // export class Index extends Vue {}
