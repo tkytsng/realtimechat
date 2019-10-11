@@ -1,38 +1,62 @@
 <template>
   <v-sheet>
-    <v-card height="56px" class="d-flex align-baseline ma-2" outlined>
-      <v-text-field
-        v-model="text"
-        placeholder="message"
-        height="100%"
-        single-line
-        flat
-        solo
-        :rules="rules.counter"
-        @keydown.enter="commit"
-      ></v-text-field>
-      <v-btn text height="100%" min-width="88px" @click="commit">送る</v-btn>
-    </v-card>
-    <v-list>
-      <v-list-item v-for="(msg,index) of committedMessages" :key="index">
-        <v-list-item-content class="committed-text" v-if="msg">{{msg.text}}</v-list-item-content>
-      </v-list-item>
-    </v-list>
-    <v-card outlined>
+    <div v-if="splitview">
       <v-list>
-        <v-list-item v-for="(msg,index) of writingMessages" :key="index">
-          <v-list-item-content class="d-flex align-end" v-if="msg">
-            <span class="my-0 writing-text">{{msg.text}}</span>
-            <v-list-item-icon class="mx-0">
-              <v-icon>mdi-settings-helper</v-icon>
-              <!-- <v-icon>mdi-fountain-pen</v-icon> -->
-            </v-list-item-icon>
+        <v-list-item v-for="(msg,index) of committedMessages" :key="index">
+          <v-list-item-content class="committed-text" v-if="msg">{{msg.text}}</v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-card outlined>
+        <v-list>
+          <v-list-item v-for="(msg,index) of writingMessages" :key="index">
+            <v-list-item-content class="d-flex align-end" v-if="msg">
+              <span class="my-0 writing-text">{{msg.text}}</span>
+              <v-list-item-icon class="mx-0">
+                <v-icon>mdi-settings-helper</v-icon>
+                <!-- <v-icon>mdi-fountain-pen</v-icon> -->
+              </v-list-item-icon>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </div>
+    <div v-else>
+      <v-list>
+        <v-list-item v-for="(msg,index) of reversedMessages" :key="index">
+          <v-list-item-content v-if="msg && !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
+          <v-list-item-content
+            v-else-if="msg && msg.isWriting"
+            class="d-flex align-end writing-text"
+          >
+            <v-slide-x-transition>
+              <span class="my-0 writing-text-content">{{msg.text}}</span>
+              <v-list-item-icon class="mx-0">
+                <v-icon>mdi-settings-helper</v-icon>
+                <!-- <v-icon>mdi-fountain-pen</v-icon> -->
+              </v-list-item-icon>
+            </v-slide-x-transition>
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-card>
+    </div>
     <!-- <v-card>{{committedMessages}}</v-card>
     <v-card>{{writingMessages}}</v-card>-->
+    <!-- 文字入力フィールド -->
+    <v-footer app fixed padless color="blue lighten-2">
+      <v-card width="100%" height="56px" class="d-flex align-baseline ma-2" outlined>
+        <v-text-field
+          v-model="text"
+          placeholder="message"
+          height="100%"
+          single-line
+          flat
+          solo
+          :rules="rules.counter"
+          @keydown.enter="commit"
+        ></v-text-field>
+        <v-btn text height="100%" min-width="88px" @click="commit">送る</v-btn>
+      </v-card>
+    </v-footer>
   </v-sheet>
 </template>
 
@@ -50,6 +74,7 @@ export default {
   data() {
     return {
       roomname: ``,
+      splitview: false,
       messages: null,
       text: ``,
       nowtextkey: null,
@@ -59,6 +84,10 @@ export default {
     }
   },
   computed: {
+    reversedMessages() {
+      if (!this.$data.messages) return
+      return Object.values(this.$data.messages as Object).reverse()
+    },
     committedMessages() {
       if (!this.$data.messages) return
       return Object.values(this.$data.messages as Object).filter(
@@ -132,7 +161,7 @@ export class Index extends Vue {}
 .committed-text {
   word-break: break-all;
 }
-.writing-text {
+.writing-text-content {
   max-width: 80%;
   overflow: hidden;
   overflow-wrap: normal;

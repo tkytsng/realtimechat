@@ -44,9 +44,9 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
+    <!-- <v-footer absolute app>
       <span>&copy; 2019</span>
-    </v-footer>
+    </v-footer>-->
   </v-app>
 </template>
 
