@@ -21,23 +21,25 @@
       </v-card>
     </div>
     <div v-else>
-      <v-list>
-        <v-list-item v-for="(msg,index) of reversedMessages" :key="index">
-          <v-list-item-content v-if="msg && !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
-          <v-list-item-content
-            v-else-if="msg && msg.isWriting"
-            class="d-flex align-end writing-text"
-          >
-            <v-slide-x-transition>
+      <!-- <v-list> -->
+      <!-- <v-slide-x-transition group> -->
+      <v-scroll-y-reverse-transition group>
+        <template v-for="(msg,index) of reversedMessages">
+          <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
+          <v-list-item v-if="msg" :key="index">
+            <v-list-item-content v-if=" !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
+            <v-list-item-content v-else class="d-flex align-end writing-text">
               <span class="my-0 writing-text-content">{{msg.text}}</span>
               <v-list-item-icon class="mx-0">
                 <v-icon>mdi-settings-helper</v-icon>
                 <!-- <v-icon>mdi-fountain-pen</v-icon> -->
               </v-list-item-icon>
-            </v-slide-x-transition>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-scroll-y-reverse-transition>
+      <!-- </v-slide-x-transition> -->
+      <!-- </v-list> -->
     </div>
     <!-- <v-card>{{committedMessages}}</v-card>
     <v-card>{{writingMessages}}</v-card>-->
