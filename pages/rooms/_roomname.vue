@@ -31,7 +31,7 @@
             <v-list-item-content v-else class="d-flex align-end writing-text">
               <span class="my-0 writing-text-content">{{msg.text}}</span>
               <v-list-item-icon class="mx-0">
-                <v-icon>mdi-settings-helper</v-icon>
+                <v-icon class="writing-icon">mdi-settings-helper</v-icon>
                 <!-- <v-icon>mdi-fountain-pen</v-icon> -->
               </v-list-item-icon>
             </v-list-item-content>
@@ -167,6 +167,9 @@ export class Index extends Vue {}
   max-width: 80%;
   overflow: hidden;
   overflow-wrap: normal;
+}
+.writing-text .mdi-settings-helper {
+  animation: flash 2s cubic-bezier(0.4, 0, 1, 1) infinite alternate;
 }
 .v-list-item__content > * {
   flex: none;
