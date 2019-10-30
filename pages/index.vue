@@ -19,7 +19,8 @@
 // import Logo from "~/components/Logo.vue"
 // import VuetifyLogo from "~/components/VuetifyLogo.vue"
 import { Component, Vue } from "vue-property-decorator"
-import firebase from "~/plugins/firebase"
+import firebase from "../plugins/firebase"
+import * as scheduler from "../scheduler"
 
 export default Vue.extend({
   components: {},
@@ -29,7 +30,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    // const roomsRef =
+    console.log(scheduler.deleteExpiredMessage())
     firebase
       .database()
       .ref(`rooms`)

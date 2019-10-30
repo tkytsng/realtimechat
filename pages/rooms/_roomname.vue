@@ -64,8 +64,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import firebase from "~/plugins/firebase"
+import firebase from "../../plugins/firebase"
 import { firestore } from "firebase"
+
 interface Imessage {
   text: string
   isWriting: boolean
@@ -116,7 +117,8 @@ export default {
 
         this.nowtextkey = messagesRef.push({
           text: this.text,
-          isWriting: true
+          isWriting: true,
+          createTime: firestore.Timestamp.now().seconds
         }).key
       } else {
         if (this.text) {
@@ -148,6 +150,8 @@ export default {
     }
   },
   mounted() {
+    console.log(1)
+
     this.roomname = this.$route.params.roomname
     firebase
       .database()
