@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "semicolon": false,
+    "quotemark": false,
+    "no-consecutive-blank-lines": false,
+    "no-trailing-whitespace": false,
+    "jsdoc-format": false
+  }
+}

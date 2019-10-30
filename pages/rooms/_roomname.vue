@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import firebase from "~/plugins/firebase",
+import firebase from "~/plugins/firebase"
 import { firestore } from "firebase"
 interface Imessage {
   text: string
