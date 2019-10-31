@@ -30,7 +30,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    console.log(scheduler.deleteExpiredMessage())
+    // scheduler.deleteExpiredMessage()
     firebase
       .database()
       .ref(`rooms`)
