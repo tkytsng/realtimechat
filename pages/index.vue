@@ -3,47 +3,40 @@
     <v-flex xs12 sm8 md6>
       <div class="text-center">
         <v-list>
-          <v-list-item v-for="room of rooms" :key="room.key">
+          <v-list-item v-for="room in rooms" :key="room.index">
             <v-list-item-title>
               <v-btn nuxt outlined :to="{path:`/rooms/${room.name}`}">{{room.name}}</v-btn>
             </v-list-item-title>
           </v-list-item>
         </v-list>
       </div>
-      <v-card></v-card>
+      <!-- <v-card>{{rooms}}</v-card> -->
     </v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
-// import Logo from "~/components/Logo.vue"
-// import VuetifyLogo from "~/components/VuetifyLogo.vue"
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../plugins/firebase"
+// import { mapGetters } from "vuex"
 import * as scheduler from "../scheduler"
 
-export default Vue.extend({
+export default {
   components: {},
   data() {
     return {
-      // rooms: null
+      // rooms: []
     }
   },
   computed: {
     rooms() {
-      firebase
-        .firestore()
-        .collection(`rooms`)
-        .get()
-        .then(v => {
-          return v
-        })
+      // console.log(this.$store.state.rooms)
+      return this.$store.state.rooms.data
     }
   },
-  mounted() {
-    // scheduler.deleteExpiredMessage()
-    // this.rooms = firebase.firestore().collection(`rooms`)
+  created() {
+    this.$store.dispatch(`bindRooms`)
   }
-})
-// export class Index extends Vue {}
+}
+export class Index extends Vue {}
 </script>
