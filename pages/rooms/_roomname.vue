@@ -66,6 +66,8 @@
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../../plugins/firebase"
 import { firestore } from "firebase"
+// import * as uuid from "uuid/v5"
+const uuid = require("uuid/v4")
 
 interface Imessage {
   text: string
@@ -89,8 +91,8 @@ export default {
   },
   computed: {
     reversedMessages() {
-      if (!this.$data.messages) return
-      return Object.values(this.$data.messages as Object).reverse()
+      if (!this.$store.state.room.messages) return
+      return Object.values(this.$store.state.room.messages as Object).reverse()
     },
     committedMessages() {
       if (!this.$data.messages) return
@@ -108,28 +110,30 @@ export default {
   watch: {
     text() {
       // console.log(this.text)
-      const messagesRef = firebase
-        .database()
-        .ref(`rooms/${this.roomname}/messages`)
+      const messagesDocRef = firebase
+        .firestore()
+        .collection(`messages`)
+        .doc(this.roomname)
 
       if (!this.nowtextkey) {
         if (!this.text) return
 
-        this.nowtextkey = messagesRef.push({
-          text: this.text,
-          isWriting: true,
-          createTime: firestore.Timestamp.now().seconds
-        }).key
+        this.nowtextkey = uuid()
+        // this.nowtextkey = messagesDocRef.({
+        //   text: this.text,
+        //   isWriting: true,
+        //   createTime: firestore.Timestamp.now().seconds,
+        // }).key
       } else {
-        if (this.text) {
-          messagesRef.child(`${this.nowtextkey}`).update({
-            text: this.text,
-            isWriting: true
-          })
-        } else {
-          messagesRef.child(`${this.nowtextkey}`).remove()
-          this.nowtextkey = null
-        }
+        // if (this.text) {
+        //   messagesRef.child(`${this.nowtextkey}`).update({
+        //     text: this.text,
+        //     isWriting: true
+        //   })
+        // } else {
+        //   messagesRef.child(`${this.nowtextkey}`).remove()
+        //   this.nowtextkey = null
+        // }
       }
     }
   },
@@ -149,16 +153,9 @@ export default {
       this.text = ``
     }
   },
-  mounted() {
-    console.log(1)
-
+  created() {
     this.roomname = this.$route.params.roomname
-    firebase
-      .database()
-      .ref(`rooms/${this.roomname}/messages`)
-      .on("value", snapshot => {
-        this.messages = snapshot.val()
-      })
+    this.$store.dispatch(`bindMessages`, this.$route.params.roomname)
   }
 }
 export class Index extends Vue {}

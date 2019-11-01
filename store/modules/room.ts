@@ -3,12 +3,12 @@ import fb from "../../plugins/firebase"
 export default {
   state() {
     return {
-      data: []
+      messages: []
     }
   },
   mutations: {
     bindMessages(state, payload) {
-      state.data = payload
+      state.messages = payload
     },
     addMessage(state, payload) {
       const roomIndex = state.data.findIndex(({ id }) => id === payload.id)
@@ -30,38 +30,32 @@ export default {
     // rooms: state => state.data
   },
   actions: {
-    async bindMessages({ commit }) {
-      const ref = fb.firestore().collection(`rooms`)
-      const snapshot = await ref.get()
-      const payload = snapshot.docs.map(room => {
-        return {
-          id: room.id,
-          name: room.data().name
-        }
-      })
-      commit(`bindRooms`, payload)
+    async bindMessages({ commit }, name) {
+      const snapshot = await fb
+        .firestore()
+        .collection(`messages`)
+        .doc(name)
+        .get()
 
-      const roomsOb = ref.onSnapshot(snapshot => {
-        for (const change of snapshot.docChanges()) {
-          // console.log(change)
-          if (change.type === "modified") {
-            commit(`modifyRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
-          } else if (change.type === "added") {
-            commit(`addRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
-          } else if (change.type === "removed") {
-            commit(`removeRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
-          }
+      if (!snapshot.exists) return
+
+      //  {
+      //   roomname: string
+      //   roommsgs: {
+      //     text: string
+      //     isWriting: boolean
+      //     createTime: fb.firestore.Timestamp
+      //   }
+      // }
+      const room = snapshot.data()
+      const payload = room.roommsgs.map(msg => {
+        return {
+          text: msg.text,
+          isWriting: msg.isWriting
         }
       })
+      console.log(payload)
+      commit(`bindMessages`, payload)
     }
   }
 }
