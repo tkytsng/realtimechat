@@ -66,8 +66,6 @@
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../../plugins/firebase"
 import { firestore } from "firebase"
-// import * as uuid from "uuid/v5"
-const uuid = require("uuid/v4")
 
 interface Imessage {
   text: string
@@ -112,28 +110,28 @@ export default {
       // console.log(this.text)
       const messagesDocRef = firebase
         .firestore()
-        .collection(`messages`)
-        .doc(this.roomname)
+        .collection(`${this.roomname}-messages`)
 
       if (!this.nowtextkey) {
         if (!this.text) return
 
-        this.nowtextkey = uuid()
-        // this.nowtextkey = messagesDocRef.({
-        //   text: this.text,
-        //   isWriting: true,
-        //   createTime: firestore.Timestamp.now().seconds,
-        // }).key
+        messagesDocRef
+          .add({
+            text: this.text,
+            isWriting: true,
+            createTime: firestore.Timestamp.now().seconds
+          })
+          .then(docRef => (this.nowtextkey = docRef.id))
       } else {
-        // if (this.text) {
-        //   messagesRef.child(`${this.nowtextkey}`).update({
-        //     text: this.text,
-        //     isWriting: true
-        //   })
-        // } else {
-        //   messagesRef.child(`${this.nowtextkey}`).remove()
-        //   this.nowtextkey = null
-        // }
+        if (this.text) {
+          messagesDocRef.doc(this.nowtextkey).update({
+            text: this.text,
+            isWriting: true
+          })
+        } else {
+          messagesDocRef.doc(this.nowtextkey).delete()
+          this.nowtextkey = null
+        }
       }
     }
   },
@@ -143,10 +141,11 @@ export default {
       if (this.text.length > 60) return
 
       firebase
-        .database()
-        .ref(`rooms/${this.roomname}/messages/${this.nowtextkey}`)
+        .firestore()
+        .collection(`${this.roomname}-messages`)
+        .doc(`${this.nowtextkey}`)
         .update({
-          text: this.text,
+          // text: this.text,
           isWriting: false
         })
       this.nowtextkey = null

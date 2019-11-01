@@ -33,11 +33,11 @@ export default {
     async bindMessages({ commit }, name) {
       const snapshot = await fb
         .firestore()
-        .collection(`messages`)
-        .doc(name)
+        .collection(`${name}-messages`)
+        .orderBy(`createTime`, "asc")
         .get()
 
-      if (!snapshot.exists) return
+      if (snapshot.size === 0) return
 
       //  {
       //   roomname: string
@@ -47,11 +47,11 @@ export default {
       //     createTime: fb.firestore.Timestamp
       //   }
       // }
-      const room = snapshot.data()
-      const payload = room.roommsgs.map(msg => {
+      const room = snapshot.docs
+      const payload = room.map(msg => {
         return {
-          text: msg.text,
-          isWriting: msg.isWriting
+          text: msg.data().text,
+          isWriting: msg.data().isWriting
         }
       })
       console.log(payload)
