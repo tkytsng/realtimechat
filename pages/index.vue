@@ -26,17 +26,23 @@ export default Vue.extend({
   components: {},
   data() {
     return {
-      rooms: null
+      // rooms: null
+    }
+  },
+  computed: {
+    rooms() {
+      firebase
+        .firestore()
+        .collection(`rooms`)
+        .get()
+        .then(v => {
+          return v
+        })
     }
   },
   mounted() {
     // scheduler.deleteExpiredMessage()
-    firebase
-      .database()
-      .ref(`rooms`)
-      .on("value", snapshot => {
-        this.rooms = snapshot.val()
-      })
+    // this.rooms = firebase.firestore().collection(`rooms`)
   }
 })
 // export class Index extends Vue {}

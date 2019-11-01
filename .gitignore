@@ -90,4 +90,5 @@ sw.*
 *.swp
 
 # firebase
+/plugins/firebase.ts
 plugins/firebase.ts
