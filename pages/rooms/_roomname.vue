@@ -24,7 +24,7 @@
       <!-- <v-list> -->
       <!-- <v-slide-x-transition group> -->
       <v-scroll-y-reverse-transition group>
-        <template v-for="(msg,index) of reversedMessages">
+        <template v-for="(msg,index) of Messages">
           <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
           <v-list-item v-if="msg" :key="index">
             <v-list-item-content v-if=" !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
@@ -88,6 +88,10 @@ export default {
     }
   },
   computed: {
+    Messages() {
+      if (!this.$store.state.room.messages) return
+      return this.$store.state.room.messages
+    },
     reversedMessages() {
       if (!this.$store.state.room.messages) return
       return Object.values(this.$store.state.room.messages as Object).reverse()

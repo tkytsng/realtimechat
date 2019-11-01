@@ -34,7 +34,7 @@ export default {
       const snapshot = await fb
         .firestore()
         .collection(`${name}-messages`)
-        .orderBy(`createTime`, "asc")
+        .orderBy(`createTime`, "desc")
         .get()
 
       if (snapshot.size === 0) return
