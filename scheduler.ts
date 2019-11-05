@@ -1,30 +1,21 @@
-import firebase from "./plugins/firebase"
-export async function deleteExpiredMessage(expiredTime = 60) {
-  const nowSec = firebase.firestore.Timestamp.now().seconds
-  const roomssnapshot = await firebase
-    .database()
-    .ref(`rooms`)
-    .once("value")
+// // import firebase from "./plugins/firebase"
+// import * as admin from "firebase-admin"
+// admin.initializeApp()
 
-  const rooms = roomssnapshot.val()
+// export async function deleteExpiredRoom(expiredTimeMin = 30) {
+//   // const nowSec = admin.firestore.Timestamp.now().seconds
+//   // const querySnapshot = await firebase
+//   //   .firestore()
+//   //   .collection(`rooms`).
+//   //   // .get()
 
-  // let msgstodelete = []
-  for (const key of Object.keys(rooms)) {
-    const room: {
-      name: string
-      messages: {}
-    } = rooms[key]
+//   // const rooms = querySnapshot.docs
 
-    // console.log(room)
-    for (const key of Object.keys(room.messages)) {
-      const msg: { isWriting: boolean; createTime: number } = room.messages[key]
-      if (msg.isWriting && msg.createTime <= nowSec - expiredTime)
-        console.log(msg)
-      //   firebase
-      //     .database()
-      //     .ref(`rooms/${room.name}`)
-      //     .child(`messages/${key}`)
-      //     .remove()
-    }
-  }
-}
+//   // // let msgstodelete = []
+//   // for (const room of rooms) {
+//   //   if (room.data().createTime + expiredTimeMin * 60 <= nowSec) {
+//   //     console.log(room.id)
+//   //   }
+//   // }
+//   console.log(`test`)
+// }

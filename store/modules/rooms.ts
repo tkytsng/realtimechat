@@ -10,15 +10,9 @@ export default {
     }
   },
   mutations: {
-    bindRooms(state, payload) {
-      state.data = payload
-    },
-    modifyRoom(state, payload) {
-      const roomIndex = state.data.findIndex(({ id }) => id === payload.id)
-      if (roomIndex !== -1) {
-        state.data[roomIndex].name = payload.name
-      }
-    },
+    // bindRooms(state, payload) {
+    //   state.data = payload
+    // },
     addRoom(state, payload) {
       const roomIndex = state.data.findIndex(({ id }) => id === payload.id)
       if (roomIndex === -1) {
@@ -26,6 +20,12 @@ export default {
           id: payload.id,
           name: payload.name
         })
+      }
+    },
+    modifyRoom(state, payload) {
+      const roomIndex = state.data.findIndex(({ id }) => id === payload.id)
+      if (roomIndex !== -1) {
+        state.data[roomIndex].name = payload.name
       }
     },
     removeRoom(state, payload) {
@@ -40,34 +40,20 @@ export default {
   },
   actions: {
     async bindRooms({ commit }) {
-      const ref = fb.firestore().collection(`rooms`)
-      const snapshot = await ref.get()
-      const payload = snapshot.docs.map(room => {
-        return {
-          id: room.id,
-          name: room.data().name
-        }
-      })
-      commit(`bindRooms`, payload)
+      const roomsRef = fb.firestore().collection(`rooms`)
 
-      const roomsOb = ref.onSnapshot(snapshot => {
+      roomsRef.onSnapshot(snapshot => {
         for (const change of snapshot.docChanges()) {
           // console.log(change)
+          const payload = {
+            id: change.doc.id
+          }
           if (change.type === "modified") {
-            commit(`modifyRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
+            commit(`modifyRoom`, payload)
           } else if (change.type === "added") {
-            commit(`addRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
+            commit(`addRoom`, payload)
           } else if (change.type === "removed") {
-            commit(`removeRoom`, {
-              id: change.doc.id,
-              name: change.doc.data().name
-            })
+            commit(`removeRoom`, payload)
           }
         }
       })

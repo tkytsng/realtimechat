@@ -24,7 +24,7 @@
       <!-- <v-list> -->
       <!-- <v-slide-x-transition group> -->
       <v-scroll-y-reverse-transition group>
-        <template v-for="(msg,index) of Messages">
+        <template v-for="(msg,index) of reversedMessages">
           <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
           <v-list-item v-if="msg" :key="index">
             <v-list-item-content v-if=" !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>

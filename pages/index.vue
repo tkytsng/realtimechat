@@ -5,7 +5,7 @@
         <v-list>
           <v-list-item v-for="room in rooms" :key="room.index">
             <v-list-item-title>
-              <v-btn nuxt outlined :to="{path:`/rooms/${room.name}`}">{{room.name}}</v-btn>
+              <v-btn nuxt outlined :to="{path:`/rooms/${room.id}`}">{{room.id}}</v-btn>
             </v-list-item-title>
           </v-list-item>
         </v-list>
