@@ -3,27 +3,30 @@ import fb from "../../plugins/firebase"
 export default {
   state() {
     return {
-      messages: []
+      messages: [],
+      roomname: ""
     }
   },
   mutations: {
+    setRoomName(state, payload) {
+      state.roomname = payload
+    },
     bindMessages(state, payload) {
       state.messages = payload
     },
     addMsg(state, payload) {
-      // const index = state.data.findIndex(({ id }) => id === payload.id)
-      // if (index === -1) {
-      state.messages.push({
-        id: payload.id,
-        text: payload.text,
-        isWriting: payload.isWriting
-      })
-      // console.log(state.messages)
-      // }
+      const index = state.messages.findIndex(({ id }) => id === payload.id)
+      if (index === -1) {
+        state.messages.unshift({
+          id: payload.id,
+          text: payload.text,
+          isWriting: payload.isWriting
+        })
+        // console.log(state.messages)
+      }
     },
     modifyMsg(state, payload) {
       const index = state.messages.findIndex(({ id }) => id === payload.id)
-      console.log(index)
       if (index !== -1) {
         state.messages[index].text = payload.text
         state.messages[index].isWriting = payload.isWriting
@@ -41,18 +44,12 @@ export default {
   },
   actions: {
     async bindMessages({ commit }, name) {
-      // const snapshot = await fb
-      //   .firestore()
-      //   .collection(`${name}-messages`)
-      //   .orderBy(`createTime`, "desc")
-      //   .get()
-
-      // if (snapshot.size === 0) return
+      commit(`setRoomName`, name)
 
       const collectionRef = await fb
         .firestore()
         .collection(`${name}-messages`)
-        .orderBy(`createTime`, "desc")
+        .orderBy(`createTime`, "asc")
 
       collectionRef.onSnapshot(snapshot => {
         for (const change of snapshot.docChanges()) {
@@ -72,24 +69,27 @@ export default {
           }
         }
       })
-
-      //  {
-      //   roomname: string
-      //   roommsgs: {
-      //     text: string
-      //     isWriting: boolean
-      //     createTime: fb.firestore.Timestamp
-      //   }
-      // }
-      // const room = snapshot.docs
-      // const payload = room.map(msg => {
-      //   return {
-      //     text: msg.data().text,
-      //     isWriting: msg.data().isWriting
-      //   }
-      // })
-      // console.log(payload)
-      // commit(`bindMessages`, payload)
+    },
+    deleteExpiredMessage({ commit }, roomname, expiredTimeSec = 100) {
+      const nowSec = fb.firestore.Timestamp.now().seconds
+      console.log(roomname)
+      fb.firestore()
+        .collection(`${roomname}-messages`)
+        .where(`isWriting`, `==`, true)
+        .get()
+        .then(msgs => {
+          let msgsToDelete = []
+          for (const msg of msgs.docs) {
+            if (msg.data().createTime <= nowSec - expiredTimeSec) {
+              msgsToDelete.push(msg.id)
+            }
+          }
+          for (const key of msgsToDelete) {
+            fb.firestore()
+              .doc(`${roomname}-messages/${key}`)
+              .delete()
+          }
+        })
     }
   }
 }

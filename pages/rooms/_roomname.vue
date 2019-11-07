@@ -24,7 +24,7 @@
       <!-- <v-list> -->
       <!-- <v-slide-x-transition group> -->
       <v-scroll-y-reverse-transition group>
-        <template v-for="(msg,index) of reversedMessages">
+        <template v-for="(msg,index) of Messages">
           <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
           <v-list-item v-if="msg" :key="index">
             <v-list-item-content v-if=" !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
@@ -66,6 +66,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../../plugins/firebase"
 import { firestore } from "firebase"
+import * as uuidv4 from "uuid/v4"
 
 interface Imessage {
   text: string
@@ -119,13 +120,13 @@ export default {
       if (!this.nowtextkey) {
         if (!this.text) return
 
-        messagesDocRef
-          .add({
-            text: this.text,
-            isWriting: true,
-            createTime: firestore.Timestamp.now().seconds
-          })
-          .then(docRef => (this.nowtextkey = docRef.id))
+        this.nowtextkey = uuidv4()
+
+        messagesDocRef.doc(this.nowtextkey).set({
+          text: this.text,
+          isWriting: true,
+          createTime: firestore.Timestamp.now().seconds
+        })
       } else {
         if (this.text) {
           messagesDocRef.doc(this.nowtextkey).update({
@@ -154,10 +155,39 @@ export default {
         })
       this.nowtextkey = null
       this.text = ``
+    },
+    deleteExpiredMessage(expiredTimeSec = 100) {
+      const nowSec = firebase.firestore.Timestamp.now().seconds
+      firebase
+        .firestore()
+        .collection(`${this.$route.params.roomname}-messages`)
+        .where(`isWriting`, `==`, true)
+        // .where(`createTime`, `<=`, nowSec - expiredTimeSec)
+        .get()
+        .then(msgs => {
+          let msgsToDelete = []
+          for (const msg of msgs.docs) {
+            if (msg.data().createTime <= nowSec - expiredTimeSec) {
+              msgsToDelete.push(msg.id)
+            }
+          }
+          for (const key of msgsToDelete) {
+            firebase
+              .firestore()
+              .doc(`${this.$route.params.roomname}-messages/${key}`)
+              .delete()
+          }
+        })
     }
   },
   created() {
     this.roomname = this.$route.params.roomname
+    // this.deleteExpiredMessage()
+    this.$store.dispatch(
+      `deleteExpiredMessage`,
+      this.$route.params.roomname,
+      100
+    )
     this.$store.dispatch(`bindMessages`, this.$route.params.roomname)
   }
 }

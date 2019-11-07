@@ -19,7 +19,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../plugins/firebase"
 // import { mapGetters } from "vuex"
-import * as scheduler from "../scheduler"
+// import * as scheduler from "../scheduler"
 
 export default {
   components: {},
