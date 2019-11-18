@@ -1,16 +1,17 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <v-list>
-          <v-list-item v-for="room in rooms" :key="room.index">
-            <v-list-item-title>
-              <v-btn nuxt outlined :to="{path:`/rooms/${room.id}`}">{{room.id}}</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </div>
-      <!-- <v-card>{{rooms}}</v-card> -->
+      <v-card flat>
+        <v-btn
+          v-for="room in rooms"
+          :key="room.index"
+          nuxt
+          outlined
+          class="ma-1"
+          :to="{ path: `/rooms/${room.id}` }"
+          >{{ room.id }}</v-btn
+        >
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
@@ -22,6 +23,7 @@ import firebase from "../plugins/firebase"
 // import * as scheduler from "../scheduler"
 
 export default {
+  name: "home",
   components: {},
   data() {
     return {

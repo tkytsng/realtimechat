@@ -2,15 +2,17 @@
   <v-sheet>
     <div v-if="splitview">
       <v-list>
-        <v-list-item v-for="(msg,index) of committedMessages" :key="index">
-          <v-list-item-content class="committed-text" v-if="msg">{{msg.text}}</v-list-item-content>
+        <v-list-item v-for="(msg, index) of committedMessages" :key="index">
+          <v-list-item-content class="committed-text" v-if="msg">{{
+            msg.text
+          }}</v-list-item-content>
         </v-list-item>
       </v-list>
       <v-card outlined>
         <v-list>
-          <v-list-item v-for="(msg,index) of writingMessages" :key="index">
+          <v-list-item v-for="(msg, index) of writingMessages" :key="index">
             <v-list-item-content class="d-flex align-end" v-if="msg">
-              <span class="my-0 writing-text">{{msg.text}}</span>
+              <span class="my-0 writing-text">{{ msg.text }}</span>
               <v-list-item-icon class="mx-0">
                 <v-icon>mdi-settings-helper</v-icon>
                 <!-- <v-icon>mdi-fountain-pen</v-icon> -->
@@ -24,12 +26,14 @@
       <!-- <v-list> -->
       <!-- <v-slide-x-transition group> -->
       <v-scroll-y-reverse-transition group>
-        <template v-for="(msg,index) of Messages">
+        <template v-for="(msg, index) of Messages">
           <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
           <v-list-item v-if="msg" :key="index">
-            <v-list-item-content v-if=" !msg.isWriting" class="committed-text">{{msg.text}}</v-list-item-content>
+            <v-list-item-content v-if="!msg.isWriting" class="committed-text">{{
+              msg.text
+            }}</v-list-item-content>
             <v-list-item-content v-else class="d-flex align-end writing-text">
-              <span class="my-0 writing-text-content">{{msg.text}}</span>
+              <span class="my-0 writing-text-content">{{ msg.text }}</span>
               <v-list-item-icon class="mx-0">
                 <v-icon class="writing-icon">mdi-settings-helper</v-icon>
                 <!-- <v-icon>mdi-fountain-pen</v-icon> -->
@@ -45,7 +49,12 @@
     <v-card>{{writingMessages}}</v-card>-->
     <!-- 文字入力フィールド -->
     <v-footer app fixed padless color="blue lighten-2">
-      <v-card width="100%" height="56px" class="d-flex align-baseline ma-2" outlined>
+      <v-card
+        width="100%"
+        height="56px"
+        class="d-flex align-baseline ma-2"
+        outlined
+      >
         <v-text-field
           v-model="text"
           placeholder="message"
@@ -74,7 +83,7 @@ interface Imessage {
 }
 
 export default {
-  name: `rooms`,
+  name: `room`,
   components: {},
   data() {
     return {

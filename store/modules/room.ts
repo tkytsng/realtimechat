@@ -14,6 +14,9 @@ export default {
     bindMessages(state, payload) {
       state.messages = payload
     },
+    clearMessages(state) {
+      state.messages = []
+    },
     addMsg(state, payload) {
       const index = state.messages.findIndex(({ id }) => id === payload.id)
       if (index === -1) {
@@ -44,6 +47,7 @@ export default {
   },
   actions: {
     async bindMessages({ commit }, name) {
+      commit(`clearMessages`)
       commit(`setRoomName`, name)
 
       const collectionRef = await fb

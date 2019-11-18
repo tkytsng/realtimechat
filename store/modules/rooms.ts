@@ -2,6 +2,7 @@ import fb from "../../plugins/firebase"
 // import Vuex from "vuex"
 // import { vuexfireMutations, firestoreAction } from "vuexfire"
 // const programsRef = firebase.database().ref('programs')
+import * as uuidv4 from "uuid/v4"
 
 export default {
   state() {
@@ -57,6 +58,22 @@ export default {
           }
         }
       })
+    },
+    async createNewRoom({ commit }, roomname) {
+      console.log(roomname)
+      const roomsRef = fb.firestore().collection(`rooms`)
+      roomsRef.doc(roomname).set({
+        createTime: fb.firestore.FieldValue.serverTimestamp()
+      })
+
+      fb.firestore()
+        .doc(`${roomname}-messages/${uuidv4()}`)
+        .set({
+          text: `${roomname}を作成しました。`,
+          isWriting: false,
+          createTime: fb.firestore.Timestamp.now().seconds
+        })
+      return true
     }
   }
 }
