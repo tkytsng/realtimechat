@@ -15,7 +15,7 @@
     "firebase": "^7.1.0",
     "firebase-tools": "^7.4.0",
     "global": "^4.4.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.10.2",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3",
     "uuid": "^3.3.3",
