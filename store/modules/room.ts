@@ -76,7 +76,7 @@ export default {
     },
     deleteExpiredMessage({ commit }, roomname, expiredTimeSec = 100) {
       const nowSec = fb.firestore.Timestamp.now().seconds
-      console.log(roomname)
+      // console.log(roomname)
       fb.firestore()
         .collection(`${roomname}-messages`)
         .where(`isWriting`, `==`, true)

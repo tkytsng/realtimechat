@@ -8,7 +8,7 @@
           nuxt
           outlined
           class="ma-1"
-          :to="{ path: `/rooms/${room.id}` }"
+          :to="{ path: `/room`, query: { id: room.id } }"
           >{{ room.id }}</v-btn
         >
       </v-card>

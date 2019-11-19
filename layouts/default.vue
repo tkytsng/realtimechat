@@ -81,7 +81,7 @@ export default {
     },
     title() {
       if (this.isHome) return "Home"
-      else return this.$route.params.roomname
+      else return this.$route.query.id
     }
   },
   created() {

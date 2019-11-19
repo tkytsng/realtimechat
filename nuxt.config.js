@@ -1,4 +1,4 @@
-import colors from "vuetify/es5/util/colors";
+import colors from "vuetify/es5/util/colors"
 // import NuxtConfiguration from "@nuxt/config"
 
 export default {
@@ -70,4 +70,4 @@ export default {
      */
     extend(config, ctx) {}
   }
-};
+}

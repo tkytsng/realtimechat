@@ -60,7 +60,7 @@ export default {
       })
     },
     async createNewRoom({ commit }, roomname) {
-      console.log(roomname)
+      // console.log(roomname)
       const roomsRef = fb.firestore().collection(`rooms`)
       roomsRef.doc(roomname).set({
         createTime: fb.firestore.FieldValue.serverTimestamp()
