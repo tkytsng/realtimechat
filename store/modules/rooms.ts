@@ -2,7 +2,8 @@ import fb from "../../plugins/firebase"
 // import Vuex from "vuex"
 // import { vuexfireMutations, firestoreAction } from "vuexfire"
 // const programsRef = firebase.database().ref('programs')
-import * as uuidv4 from "uuid/v4"
+import uuidv4 = require("uuid/v4")
+// import * as uuidv4 from "uuid/v4"
 
 export default {
   state() {

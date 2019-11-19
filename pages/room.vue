@@ -1,5 +1,5 @@
 <template>
-  <v-sheet>
+  <div style="max-width:600px;margin:0 auto">
     <div v-if="splitview">
       <v-list>
         <v-list-item v-for="(msg, index) of committedMessages" :key="index">
@@ -23,64 +23,31 @@
       </v-card>
     </div>
     <div v-else>
-      <!-- <v-list> -->
-      <!-- <v-slide-x-transition group> -->
-      <v-scroll-y-reverse-transition group>
-        <template v-for="(msg, index) of Messages">
-          <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
-          <v-list-item v-if="msg" :key="index">
-            <v-list-item-content v-if="!msg.isWriting" class="committed-text">{{
-              msg.text
-            }}</v-list-item-content>
-            <v-list-item-content v-else class="d-flex align-end writing-text">
-              <span class="my-0 writing-text-content">{{ msg.text }}</span>
-              <v-list-item-icon class="mx-0">
-                <v-icon class="writing-icon">mdi-settings-helper</v-icon>
-                <!-- <v-icon>mdi-fountain-pen</v-icon> -->
-              </v-list-item-icon>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-scroll-y-reverse-transition>
-      <!-- </v-slide-x-transition> -->
-      <!-- </v-list> -->
+      <!-- <v-scroll-y-reverse-transition group> -->
+      <template v-for="(msg, index) of Messages">
+        <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
+        <v-list-item v-if="msg" :key="index">
+          <v-list-item-content v-if="!msg.isWriting" class="committed-text">{{
+            msg.text
+          }}</v-list-item-content>
+          <v-list-item-content v-else class="d-flex align-end writing-text">
+            <span class="my-0 writing-text-content">{{ msg.text }}</span>
+            <v-list-item-icon class="mx-0">
+              <v-icon class="writing-icon">mdi-settings-helper</v-icon>
+              <!-- <v-icon>mdi-fountain-pen</v-icon> -->
+            </v-list-item-icon>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      <!-- </v-scroll-y-reverse-transition> -->
     </div>
-    <!-- <v-card>{{committedMessages}}</v-card>
-    <v-card>{{writingMessages}}</v-card>-->
-    <!-- 文字入力フィールド -->
-    <v-footer app fixed padless color="blue lighten-2">
-      <v-card
-        width="100%"
-        height="56px"
-        class="d-flex align-baseline ma-2"
-        outlined
-      >
-        <v-text-field
-          v-model="text"
-          placeholder="message"
-          height="100%"
-          single-line
-          flat
-          solo
-          :rules="rules.counter"
-          @keydown.enter="commit"
-        ></v-text-field>
-        <v-btn text height="100%" min-width="88px" @click="commit">送る</v-btn>
-      </v-card>
-    </v-footer>
-  </v-sheet>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import firebase from "../plugins/firebase"
 import { firestore } from "firebase"
-import * as uuidv4 from "uuid/v4"
-
-interface Imessage {
-  text: string
-  isWriting: boolean
-}
 
 export default {
   name: `room`,
@@ -89,12 +56,7 @@ export default {
     return {
       roomname: ``,
       splitview: false,
-      messages: null,
-      text: ``,
-      nowtextkey: null,
-      rules: {
-        counter: [(v: string) => v.length <= 60 || "60文字までです"]
-      }
+      messages: null
     }
   },
   computed: {
@@ -119,76 +81,6 @@ export default {
       )
     }
   },
-  watch: {
-    text() {
-      // console.log(this.text)
-      const messagesDocRef = firebase
-        .firestore()
-        .collection(`${this.roomname}-messages`)
-
-      if (!this.nowtextkey) {
-        if (!this.text) return
-
-        this.nowtextkey = uuidv4()
-
-        messagesDocRef.doc(this.nowtextkey).set({
-          text: this.text,
-          isWriting: true,
-          createTime: firestore.Timestamp.now().seconds
-        })
-      } else {
-        if (this.text) {
-          messagesDocRef.doc(this.nowtextkey).update({
-            text: this.text,
-            isWriting: true
-          })
-        } else {
-          messagesDocRef.doc(this.nowtextkey).delete()
-          this.nowtextkey = null
-        }
-      }
-    }
-  },
-  methods: {
-    commit() {
-      if (!this.nowtextkey) return
-      if (this.text.length > 60) return
-
-      firebase
-        .firestore()
-        .collection(`${this.roomname}-messages`)
-        .doc(`${this.nowtextkey}`)
-        .update({
-          // text: this.text,
-          isWriting: false
-        })
-      this.nowtextkey = null
-      this.text = ``
-    },
-    deleteExpiredMessage(expiredTimeSec = 100) {
-      const nowSec = firebase.firestore.Timestamp.now().seconds
-      firebase
-        .firestore()
-        .collection(`${this.$route.params.roomname}-messages`)
-        .where(`isWriting`, `==`, true)
-        // .where(`createTime`, `<=`, nowSec - expiredTimeSec)
-        .get()
-        .then(msgs => {
-          let msgsToDelete = []
-          for (const msg of msgs.docs) {
-            if (msg.data().createTime <= nowSec - expiredTimeSec) {
-              msgsToDelete.push(msg.id)
-            }
-          }
-          for (const key of msgsToDelete) {
-            firebase
-              .firestore()
-              .doc(`${this.$route.params.roomname}-messages/${key}`)
-              .delete()
-          }
-        })
-    }
-  },
   created() {
     const roomname = this.$route.query.id
     this.roomname = roomname
@@ -208,6 +100,7 @@ export class Index extends Vue {}
   max-width: 80%;
   overflow: hidden;
   overflow-wrap: normal;
+  color: #888;
 }
 .writing-text .mdi-settings-helper {
   animation: flash 2s cubic-bezier(0.4, 0, 1, 1) infinite alternate;

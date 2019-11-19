@@ -12,37 +12,24 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer> -->
-    <v-app-bar fixed app>
-      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
-      <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
-      </v-btn> -->
-      <!-- <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn> -->
-      <!-- <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn> -->
-      <!-- <v-btn v-if="isHome" icon @click.stop="createRoom">
-        <v-icon>mdi-application</v-icon>
-      </v-btn> -->
-      <v-text-field
-        v-if="isHome"
-        dense
-        solo
-        single-line
-        hide-details
-        v-model="textvalue"
-        placeholder="部屋をつくる"
-        prepend-inner-icon="mdi-plus-box"
-        @click:prepend-inner.stop="createRoom"
-        @keydown.enter="createRoom"
-      ></v-text-field>
-      <v-toolbar-title v-else v-text="title" />
-      <v-spacer />
-      <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn> -->
+    <v-app-bar style="width: 100%" fixed app>
+      <div style="margin: 0 auto;width: 100%; max-width: 600px;">
+        <v-text-field
+          v-if="isHome"
+          dense
+          solo
+          single-line
+          hide-details
+          v-model="textvalue"
+          placeholder="部屋をつくる"
+          prepend-inner-icon="mdi-plus-box"
+          @click:prepend-inner.stop="createRoom"
+          @keydown.enter="createRoom"
+          style="width:100%"
+        ></v-text-field>
+        <message-field v-else style="width:100%" />
+      </div>
+      <!-- <v-spacer class="flex-grow-0 flex-shrink-1" /> -->
     </v-app-bar>
     <v-content>
       <v-container>
@@ -65,8 +52,12 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import MessageField from "~/components/MessageField.vue"
 export default {
+  components: {
+    MessageField
+  },
   data() {
     return {
       textvalue: ""
