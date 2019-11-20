@@ -1,6 +1,6 @@
 <template>
   <div style="max-width:600px;margin:0 auto">
-    <div v-if="splitview">
+    <!-- <div v-if="splitview">
       <v-list>
         <v-list-item v-for="(msg, index) of committedMessages" :key="index">
           <v-list-item-content class="committed-text" v-if="msg">{{
@@ -15,33 +15,32 @@
               <span class="my-0 writing-text">{{ msg.text }}</span>
               <v-list-item-icon class="mx-0">
                 <v-icon>mdi-settings-helper</v-icon>
-                <!-- <v-icon>mdi-fountain-pen</v-icon> -->
               </v-list-item-icon>
             </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-card>
-    </div>
-    <div v-else>
-      <!-- <v-scroll-y-reverse-transition group> -->
-      <template v-for="(msg, index) of Messages">
-        <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
-        <v-list-item v-if="msg" :key="index">
-          <v-list-item-content v-if="!msg.isWriting" class="committed-text">{{
-            msg.text
-          }}</v-list-item-content>
-          <v-list-item-content v-else class="d-flex align-end writing-text">
-            <span class="my-0 writing-text-content">{{ msg.text }}</span>
-            <v-list-item-icon class="mx-0">
-              <v-icon class="writing-icon">mdi-settings-helper</v-icon>
-              <!-- <v-icon>mdi-fountain-pen</v-icon> -->
-            </v-list-item-icon>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-      <!-- </v-scroll-y-reverse-transition> -->
-    </div>
+    </div> -->
+    <!-- <div> -->
+    <!-- <v-scroll-y-reverse-transition group> -->
+    <template v-for="(msg, index) of Messages">
+      <!-- <v-list-item v-for="(msg,index) of reversedMessages" :key="index"> -->
+      <v-list-item v-if="msg" :key="index">
+        <v-list-item-content v-if="!msg.isWriting" class="committed-text">{{
+          msg.text
+        }}</v-list-item-content>
+        <v-list-item-content v-else class="d-flex align-end writing-text">
+          <span class="my-0 writing-text-content">{{ msg.text }}</span>
+          <v-list-item-icon class="mx-0">
+            <v-icon class="writing-icon">mdi-settings-helper</v-icon>
+            <!-- <v-icon>mdi-fountain-pen</v-icon> -->
+          </v-list-item-icon>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+    <!-- </v-scroll-y-reverse-transition> -->
   </div>
+  <!-- </div> -->
 </template>
 
 <script lang="ts">
@@ -88,6 +87,12 @@ export default {
     this.$store.dispatch(`deleteExpiredMessage`, roomname, 100)
     this.$store.dispatch(`bindMessages`, roomname)
   }
+  // methods: {
+  //   onScroll(e) {
+  //     console.log(this.offsetTop)
+  //     this.offsetTop = e.target.scrollTop
+  //   }
+  // }
 }
 export class Index extends Vue {}
 </script>

@@ -1,24 +1,11 @@
 <template>
   <v-app>
-    <!-- <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
-      <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer> -->
-    <v-app-bar style="width: 100%" fixed app>
+    <v-app-bar style="width: 100%" tile color="white" elevation="2" fixed app>
       <div style="margin: 0 auto;width: 100%; max-width: 600px;">
         <v-text-field
           v-if="isHome"
           dense
-          solo
-          single-line
+          outlined
           hide-details
           v-model="textvalue"
           placeholder="部屋をつくる"
@@ -32,23 +19,10 @@
       <!-- <v-spacer class="flex-grow-0 flex-shrink-1" /> -->
     </v-app-bar>
     <v-content>
-      <v-container>
+      <v-container v-scroll="onScroll" id="aaa">
         <nuxt />
       </v-container>
     </v-content>
-    <!-- <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>mdi-repeat</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer> -->
-    <!-- <v-footer absolute app>
-      <span>&copy; 2019</span>
-    </v-footer>-->
   </v-app>
 </template>
 
@@ -60,7 +34,8 @@ export default {
   },
   data() {
     return {
-      textvalue: ""
+      textvalue: "",
+      offsetTop: 0
     }
   },
   computed: {
@@ -83,7 +58,11 @@ export default {
       if (!this.textvalue) return
 
       await this.$store.dispatch(`createNewRoom`, this.textvalue)
-      this.$router.push(`/rooms/${this.textvalue}`)
+      // this.$router.push(`/room/${this.textvalue}`)
+      this.$router.push({ path: `/room`, query: { id: this.textvalue } })
+    },
+    onScroll(e) {
+      this.offsetTop = e.target.scrollingElement.scrollTop
     }
   }
 }

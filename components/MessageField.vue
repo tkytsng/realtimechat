@@ -12,7 +12,7 @@
     single-line
     hide-details
     dense
-    solo
+    outlined
     prepend-inner-icon="mdi-plus-box"
     :rules="rules.counter"
     @keydown.enter.stop="commit"

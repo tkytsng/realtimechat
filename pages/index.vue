@@ -1,17 +1,18 @@
 <template>
   <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <v-card flat>
-        <v-btn
-          v-for="room in rooms"
-          :key="room.index"
-          nuxt
-          outlined
-          class="ma-1"
-          :to="{ path: `/room`, query: { id: room.id } }"
-          >{{ room.id }}</v-btn
-        >
-      </v-card>
+    <v-flex style="max-width:600px">
+      <!-- <v-card flat> -->
+      <v-btn
+        v-for="room in rooms"
+        :key="room.index"
+        nuxt
+        outlined
+        color="teal"
+        class="ma-1"
+        :to="{ path: `/room`, query: { id: room.id } }"
+        >{{ room.id }}</v-btn
+      >
+      <!-- </v-card> -->
     </v-flex>
   </v-layout>
 </template>
