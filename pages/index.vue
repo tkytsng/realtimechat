@@ -39,6 +39,24 @@ export default {
   },
   created() {
     this.$store.dispatch(`bindRooms`)
+
+    // const nowSec = firebase.firestore.Timestamp.now().seconds
+    // console.log(`now is ${nowSec}`)
+    // firebase
+    //   .firestore()
+    //   .collection(`rooms`)
+    //   .get()
+    //   .then(query => {
+    //     const rooms = query.docs
+    //     // let msgstodelete = []
+    //     let batch = firebase.firestore().batch()
+    //     for (const room of rooms) {
+    //       if (room.data().createTime.seconds + 30 * 60 <= nowSec) {
+    //         batch.delete(room.ref)
+    //       }
+    //     }
+    //     batch.commit()
+    //   })
   }
 }
 export class Index extends Vue {}
