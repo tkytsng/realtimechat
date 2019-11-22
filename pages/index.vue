@@ -39,7 +39,6 @@ export default {
   },
   created() {
     this.$store.dispatch(`bindRooms`)
-
     // const nowSec = firebase.firestore.Timestamp.now().seconds
     // console.log(`now is ${nowSec}`)
     // firebase

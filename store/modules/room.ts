@@ -55,6 +55,11 @@ export default {
         .collection(`${name}-messages`)
         .orderBy(`createTime`, "asc")
 
+      // const docRef = await fb
+      //   .firestore()
+      //   .collection(`messages`)
+      //   .doc(`${name}`)
+
       collectionRef.onSnapshot(snapshot => {
         for (const change of snapshot.docChanges()) {
           // console.log(change)

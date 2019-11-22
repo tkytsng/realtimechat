@@ -1,8 +1,20 @@
+require("dotenv").config()
+
 import colors from "vuetify/es5/util/colors"
 // import NuxtConfiguration from "@nuxt/config"
 
 export default {
   mode: "spa",
+  env: {
+    API_KEY: process.env.API_KEY,
+    AUTH_DOMAIN: process.env.AUTH_DOMAIN,
+    DATABASE_URL: process.env.DATABASE_URL,
+    PROJECT_ID: process.env.PROJECT_ID,
+    STORAGE_BUCKET: process.env.STORAGE_BUCKET,
+    MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
+    APP_ID: process.env.APP_ID,
+    MEASUREMENT_ID: process.env.MEASUREMENT_ID
+  },
   /*
    ** Headers of the page
    */
@@ -39,7 +51,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ["@nuxtjs/dotenv"],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
